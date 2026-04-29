@@ -1,0 +1,27 @@
+[build]
+  command = "npm install"
+  functions = "netlify/functions"
+  publish = "."
+
+[functions]
+  node_bundler = "esbuild"
+
+[[redirects]]
+  from = "/api/*"
+  to = "/.netlify/functions/api/:splat"
+  status = 200
+
+[[redirects]]
+  from = "/products/*"
+  to = "/.netlify/functions/api/products/:splat"
+  status = 200
+
+[[redirects]]
+  from = "/_next/image/*"
+  to = "/.netlify/functions/api/_next/image/:splat"
+  status = 200
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200

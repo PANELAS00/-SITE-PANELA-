@@ -423,9 +423,13 @@ app.get('*', (req, res) => {
 // ============================================================
 // START
 // ============================================================
-app.listen(PORT, () => {
-  console.log(`\n  🍳 WS Fábrica de Panelas - Server running`);
-  console.log(`  📍 http://localhost:${PORT}`);
-  console.log(`  🔑 HyperCash Public Key: ${process.env.HYPERCASH_PUBLIC_KEY ? '✅ loaded' : '❌ missing'}`);
-  console.log(`  🔐 HyperCash Secret Key: ${process.env.HYPERCASH_SECRET_KEY ? '✅ loaded' : '❌ missing'}\n`);
-});
+if (process.env.NODE_ENV !== 'test' && !process.env.NETLIFY) {
+  app.listen(PORT, () => {
+    console.log(`\n  🍳 WS Fábrica de Panelas - Server running`);
+    console.log(`  📍 http://localhost:${PORT}`);
+    console.log(`  🔑 HyperCash Public Key: ${process.env.HYPERCASH_PUBLIC_KEY ? '✅ loaded' : '❌ missing'}`);
+    console.log(`  🔐 HyperCash Secret Key: ${process.env.HYPERCASH_SECRET_KEY ? '✅ loaded' : '❌ missing'}\n`);
+  });
+}
+
+module.exports = app;
