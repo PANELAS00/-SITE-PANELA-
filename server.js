@@ -108,6 +108,22 @@ app.use('/js', express.static(path.join(__dirname, 'js')));
 app.get('/robots.txt', (req, res) => res.sendFile(path.join(__dirname, 'robots.txt')));
 app.get('/sitemap.xml', (req, res) => res.sendFile(path.join(__dirname, 'sitemap.xml')));
 
+// Task 5: Image hotlink protection
+const hotlinkProtection = (req, res, next) => {
+  const referer = req.get('Referer');
+  const allowedOrigin = 'https://wspanelas.com';
+  const isLocal = req.hostname === 'localhost' || req.hostname === '127.0.0.1';
+
+  if (!referer || isLocal || referer.startsWith(allowedOrigin) || referer.startsWith('http://localhost')) {
+    return next();
+  }
+
+  // If hotlinked, return 403 or a placeholder image
+  res.status(403).send('Hotlinking not allowed');
+};
+
+app.use(['/images', '/products', '/_next/image'], hotlinkProtection);
+
 // Proxy product images and _next/image to live site
 const axiosImg = require('axios');
 app.get('/products/*', async (req, res) => {
