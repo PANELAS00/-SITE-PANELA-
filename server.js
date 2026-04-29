@@ -16,15 +16,20 @@ app.use(express.json());
 const rateLimit = require('express-rate-limit');
 
 // Task 2: Rate limiting
+// Static assets are excluded to avoid 429 errors during normal page load
+const STATIC_EXTENSIONS = /\.(js|css|png|jpg|jpeg|gif|webp|svg|ico|woff|woff2|ttf|eot|map)$/i;
+const STATIC_PATHS = /^\/(css|js|fonts|images|_next)\//;
+
 const generalLimiter = rateLimit({
   windowMs: 60 * 1000, // 1 minute
-  max: 60, // Limit each IP to 60 requests per window
+  max: 300, // Higher limit to allow full SPA page loads
+  skip: (req) => STATIC_EXTENSIONS.test(req.path) || STATIC_PATHS.test(req.path),
   message: { error: 'Too many requests', message: 'Too many requests from this IP, please try again after a minute' }
 });
 
 const apiLimiter = rateLimit({
   windowMs: 60 * 1000, // 1 minute
-  max: 20, // Limit each IP to 20 requests per window on API routes
+  max: 60, // Limit each IP to 60 requests per window on API routes
   message: { error: 'Too many requests', message: 'Too many API requests from this IP, please try again after a minute' }
 });
 
