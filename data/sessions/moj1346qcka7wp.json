@@ -1,0 +1,83 @@
+{
+  "id": "moj1346qcka7wp",
+  "slug": "moj1346qcka7wp",
+  "status": "processing",
+  "current_step": 3,
+  "personal_info": {
+    "name": "Bruno Teste",
+    "email": "bruno@teste.com",
+    "phone": "(31) 97180-3703"
+  },
+  "address": {
+    "cep": "35410-060",
+    "street": "Rua Rio de Janeiro",
+    "number": "105",
+    "complement": "",
+    "neighborhood": "Vila Alegre (Cachoeira do Campo)",
+    "city": "Ouro Preto",
+    "state": "MG"
+  },
+  "selected_shipping": "free",
+  "shipping_cost": 0,
+  "payment_method": "pix",
+  "cpf": "45515434094",
+  "cart_data": {
+    "items": [
+      {
+        "id": 1,
+        "productId": 1,
+        "variantId": 1,
+        "title": "Produto 1",
+        "product_title": "Produto 1",
+        "image": "/products/chapa-artesanal-uai-pedra-sabao/img-0.jpg",
+        "presentment_price": 99.9,
+        "quantity": 1,
+        "orderBump": false,
+        "orderBumpSourceId": null,
+        "customization": null,
+        "customizationPrice": 0
+      }
+    ],
+    "total_price": 9990,
+    "items_subtotal_price": 9990
+  },
+  "payment_data": {
+    "qrCode": null,
+    "oid": null,
+    "amount": null,
+    "expiresAt": null,
+    "generatedAt": null,
+    "pixGenerationLockAt": null,
+    "cardAttemptStartedAt": null,
+    "pixCopiedAt": null,
+    "trackingCode": null,
+    "trackingUrl": null,
+    "method": null,
+    "gateway": null,
+    "providerLabel": null,
+    "cardTransactionId": null,
+    "cardStatus": null,
+    "cardFailureCategory": null,
+    "cardFailureMessage": null,
+    "funnel_events": [
+      "info_started:2026-04-28T19:38:03.996Z",
+      "step1_done:2026-04-28T19:38:09.620Z",
+      "cep_typed:2026-04-28T19:38:20.463Z",
+      "step2_done:2026-04-28T19:38:39.174Z",
+      "payment_view:2026-04-28T19:38:39.262Z"
+    ]
+  },
+  "query_params": {
+    "utm_source": "organic",
+    "fbp": "fb.0.1777404090836.413989215463511832",
+    "external_id": "b43fdba6-b0d4-4e9e-866b-09ba68e255bc"
+  },
+  "tracking_params": {
+    "utm_source": "organic",
+    "fbp": "fb.0.1777404090836.413989215463511832",
+    "external_id": "b43fdba6-b0d4-4e9e-866b-09ba68e255bc"
+  },
+  "receipt_uploaded_at": null,
+  "created_at": "2026-04-28T19:37:48.530Z",
+  "updated_at": "2026-04-28T19:40:14.318Z"
+}

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://wspanelas.com/</loc>
+    <priority>1.0</priority>
+    <changefreq>daily</changefreq>
+  </url>
+  <url>
+    <loc>https://wspanelas.com/produtos</loc>
+    <priority>0.9</priority>
+    <changefreq>daily</changefreq>
+  </url>
+  <url>
+    <loc>https://wspanelas.com/termos-e-politicas</loc>
+    <priority>0.5</priority>
+    <changefreq>monthly</changefreq>
+  </url>
+  <url>
+    <loc>https://wspanelas.com/trocas-devolucoes</loc>
+    <priority>0.5</priority>
+    <changefreq>monthly</changefreq>
+  </url>
+  <url>
+    <loc>https://wspanelas.com/rastreamento</loc>
+    <priority>0.4</priority>
+    <changefreq>monthly</changefreq>
+  </url>
+  <url>
+    <loc>https://wspanelas.com/sobre</loc>
+    <priority>0.6</priority>
+    <changefreq>monthly</changefreq>
+  </url>
+</urlset>

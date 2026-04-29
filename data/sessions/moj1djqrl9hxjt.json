@@ -1,0 +1,84 @@
+{
+  "id": "moj1djqrl9hxjt",
+  "slug": "moj1djqrl9hxjt",
+  "status": "awaiting_payment",
+  "current_step": 3,
+  "personal_info": {
+    "name": "Bruno Teste",
+    "email": "bruno@teste.com",
+    "phone": "(31) 99999-9999"
+  },
+  "address": {
+    "cep": "35410-060",
+    "street": "Rua Rio de Janeiro",
+    "number": "105",
+    "complement": "",
+    "neighborhood": "Vila Alegre (Cachoeira do Campo)",
+    "city": "Ouro Preto",
+    "state": "MG"
+  },
+  "selected_shipping": "free",
+  "shipping_cost": 0,
+  "payment_method": "pix",
+  "cpf": "67542128884",
+  "cart_data": {
+    "items": [
+      {
+        "id": 1,
+        "productId": 323,
+        "variantId": 548,
+        "title": "Produto 323",
+        "product_title": "Produto 323",
+        "image": "/products/76dc167694f2f89daf2b8e56a837294a-2e9b8aa09a1bb32d75173219686-49bb6cecbbfa.webp",
+        "presentment_price": 117,
+        "quantity": 1,
+        "orderBump": false,
+        "orderBumpSourceId": null,
+        "customization": null,
+        "customizationPrice": 0
+      }
+    ],
+    "total_price": 11700,
+    "items_subtotal_price": 11700
+  },
+  "payment_data": {
+    "qrCode": "00020126870014br.gov.bcb.pix2565qrcode.fyhub.com.br/qr/v3/at/7c34d26a-3cf8-4dc5-a56f-e008b70e0a925204000053039865802BR5925MARKETPLACE_E_SERVICOS_LT6009SAO_PAULO62070503***6304BDAE",
+    "oid": 43822108,
+    "amount": 111.15,
+    "expiresAt": "2026-04-30",
+    "generatedAt": "2026-04-28T19:47:02.187Z",
+    "pixGenerationLockAt": null,
+    "cardAttemptStartedAt": null,
+    "pixCopiedAt": null,
+    "trackingCode": null,
+    "trackingUrl": null,
+    "method": "pix",
+    "gateway": "hypercash",
+    "providerLabel": "BLACKPAYMENTS",
+    "cardTransactionId": null,
+    "cardStatus": null,
+    "cardFailureCategory": null,
+    "cardFailureMessage": null,
+    "funnel_events": [
+      "info_started:2026-04-28T19:46:00.986Z",
+      "step1_done:2026-04-28T19:46:31.471Z",
+      "cep_typed:2026-04-28T19:46:37.346Z",
+      "step2_done:2026-04-28T19:46:53.048Z",
+      "payment_view:2026-04-28T19:46:53.131Z",
+      "pix_attempt:2026-04-28T19:47:01.077Z"
+    ]
+  },
+  "query_params": {
+    "utm_source": "organic",
+    "fbp": "fb.0.1777404090836.413989215463511832",
+    "external_id": "b43fdba6-b0d4-4e9e-866b-09ba68e255bc"
+  },
+  "tracking_params": {
+    "utm_source": "organic",
+    "fbp": "fb.0.1777404090836.413989215463511832",
+    "external_id": "b43fdba6-b0d4-4e9e-866b-09ba68e255bc"
+  },
+  "receipt_uploaded_at": null,
+  "created_at": "2026-04-28T19:45:55.251Z",
+  "updated_at": "2026-04-28T19:47:02.187Z"
+}
