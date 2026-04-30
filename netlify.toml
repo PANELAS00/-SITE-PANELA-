@@ -6,6 +6,12 @@
 [functions]
   node_bundler = "esbuild"
 
+# Desabilitar plugin do Next.js para evitar detecção errada
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
+  [plugins.inputs]
+    disable = true
+
 [[redirects]]
   from = "/api/*"
   to = "/.netlify/functions/api/:splat"
