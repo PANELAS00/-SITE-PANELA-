@@ -23,6 +23,16 @@
   status = 200
 
 [[redirects]]
+  from = "/images/*"
+  to = "/images/:splat"
+  status = 200
+
+[[redirects]]
+  from = "/_next/static/*"
+  to = "/_next/static/:splat"
+  status = 200
+
+[[redirects]]
   from = "/_next/image"
   to = "/.netlify/functions/api/_next/image"
   status = 200
@@ -34,5 +44,5 @@
 
 [[redirects]]
   from = "/*"
-  to = "/index.html"
+  to = "/.netlify/functions/api"
   status = 200

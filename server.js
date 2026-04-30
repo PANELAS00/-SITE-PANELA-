@@ -414,45 +414,38 @@ app.get(`/_next/data/${BUILD_ID}/pay/:slug.json`, (req, res) => {
   });
 });
 
-// All other _next/data — proxy to live site
+// All other _next/data — proxy to live site with patching
 app.get(`/_next/data/${BUILD_ID}/:path(*).json`, async (req, res) => {
   const remotePath = req.params.path;
   const qs = Object.keys(req.query).length ? '?' + new URLSearchParams(req.query).toString() : '';
   const url = `${LIVE_SITE}/_next/data/${BUILD_ID}/${remotePath}.json${qs}`;
   try {
     const response = await axios.get(url, { timeout: 8000, responseType: 'json' });
-    res.json(response.data);
+    let data = response.data;
+    
+    // Patch data if it contains products
+    if (data && data.pageProps && data.pageProps.products) {
+      data.pageProps.products = data.pageProps.products.map(p => ({
+        ...p,
+        badge_config: p.badge_config || { active: false, text: '', type: 'default' }
+      }));
+    }
+    if (data && data.pageProps && data.pageProps.product) {
+      data.pageProps.product.badge_config = data.pageProps.product.badge_config || { active: false, text: '', type: 'default' };
+    }
+
+    res.json(data);
   } catch (err) {
     console.error(`[Proxy] Failed ${url}:`, err.message);
     res.json({ pageProps: {}, __N_SSP: true });
   }
 });
 
-
-
 // ============================================================
-// SPA CATCH-ALL & HTML PATCHER
+// SPA CATCH-ALL
 // ============================================================
 app.get('*', (req, res) => {
-  const indexPath = path.join(__dirname, 'index.html');
-  if (req.path === '/' || !req.path.includes('.')) {
-    try {
-      let html = fs.readFileSync(indexPath, 'utf8');
-      // Senior Fix: Patch all URLs on the fly
-      html = html.replace(/https:\/\/cdn\.wspanelas\.com\/images\//g, '/images/');
-      html = html.replace(/\/_next\/image\?url=([^&"'> \n]+)(?:&[^"'> \n]*)?/g, (match, url) => {
-        const decoded = decodeURIComponent(url);
-        if (decoded.includes('cdn.wspanelas.com/images/')) {
-          return '/images/' + decoded.split('cdn.wspanelas.com/images/')[1];
-        }
-        return decoded;
-      });
-      return res.send(html);
-    } catch (e) {
-      return res.sendFile(indexPath);
-    }
-  }
-  res.sendFile(indexPath);
+  res.sendFile(path.join(__dirname, 'index.html'));
 });
 
 // ============================================================
