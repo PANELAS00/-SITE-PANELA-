@@ -1,11 +1,11 @@
 [build]
   command = ""
-  publish = "."
+  publish = "public"
   functions = "netlify/functions"
 
 [functions]
   node_bundler = "esbuild"
-  included_files = ["images/**", "data/**", "index.html"]
+  included_files = ["public/images/**", "public/data/**", "public/index.html"]
 
 [[redirects]]
   from = "/api/config/whatsapp"

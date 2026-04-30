@@ -5,10 +5,18 @@ const fs = require('fs');
 const multer = require('multer');
 const db = require('./lib/db');
 const gateway = require('./lib/gateway');
+const axios = require('axios');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 const BUILD_ID = 'iobITvSU-zXAZFV2O5LtN';
+
+const DATA_DIR = process.env.NETLIFY ? '/tmp/data' : path.join(__dirname, 'public/data');
+const UPLOADS_DIR = process.env.NETLIFY ? '/tmp/images' : path.join(__dirname, 'public/images');
+
+// Ensure directories exist
+if (!fs.existsSync(DATA_DIR)) fs.mkdirSync(DATA_DIR, { recursive: true });
+if (!fs.existsSync(UPLOADS_DIR)) fs.mkdirSync(UPLOADS_DIR, { recursive: true });
 
 // Middleware
 app.use(express.json());
@@ -96,15 +104,12 @@ const SITE_SETTINGS = {
 // ============================================================
 // STATIC FILE SERVING
 // ============================================================
-app.use('/_next/static', express.static(path.join(__dirname, '_next', 'static')));
-app.use('/css', express.static(path.join(__dirname, 'css')));
-app.use('/fonts', express.static(path.join(__dirname, 'fonts')));
-app.use('/images', express.static(path.join(__dirname, 'images')));
-app.use('/js', express.static(path.join(__dirname, 'js')));
+app.use(express.static(path.join(__dirname, 'public')));
+app.use('/_next/static', express.static(path.join(__dirname, 'public/_next/static')));
 
 // SEO Assets
-app.get('/robots.txt', (req, res) => res.sendFile(path.join(__dirname, 'robots.txt')));
-app.get('/sitemap.xml', (req, res) => res.sendFile(path.join(__dirname, 'sitemap.xml')));
+app.get('/robots.txt', (req, res) => res.sendFile(path.join(__dirname, 'public/robots.txt')));
+app.get('/sitemap.xml', (req, res) => res.sendFile(path.join(__dirname, 'public/sitemap.xml')));
 
 // Task 5: Image hotlink protection
 // Hotlink protection disabled for stability
@@ -114,7 +119,7 @@ const axiosImg = require('axios');
 
 app.get('/products/*', (req, res) => {
   const imagePath = req.params[0];
-  const localPath = path.join(__dirname, 'images', imagePath);
+  const localPath = path.join(__dirname, 'public/images', imagePath);
   if (fs.existsSync(localPath)) {
     return res.sendFile(localPath);
   }
@@ -445,7 +450,7 @@ app.get(`/_next/data/${BUILD_ID}/:path(*).json`, async (req, res) => {
 // SPA CATCH-ALL
 // ============================================================
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'index.html'));
+  res.sendFile(path.join(__dirname, 'public/index.html'));
 });
 
 // ============================================================
