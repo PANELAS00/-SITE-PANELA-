@@ -107,19 +107,7 @@ app.get('/robots.txt', (req, res) => res.sendFile(path.join(__dirname, 'robots.t
 app.get('/sitemap.xml', (req, res) => res.sendFile(path.join(__dirname, 'sitemap.xml')));
 
 // Task 5: Image hotlink protection
-const hotlinkProtection = (req, res, next) => {
-  const referer = req.get('Referer') || '';
-  const allowedOrigin = 'https://wspanelas.com';
-  const isLocal = req.hostname === 'localhost' || req.hostname === '127.0.0.1';
-
-  if (!referer || isLocal || referer.startsWith(allowedOrigin) || referer.includes('.netlify.app') || referer.startsWith('http://localhost')) {
-    return next();
-  }
-
-  res.status(403).send('Hotlinking not allowed');
-};
-
-app.use(['/images', '/products', '/_next/image'], hotlinkProtection);
+// Hotlink protection disabled for stability
 
 // Proxy product images and _next/image to live site
 const axiosImg = require('axios');
@@ -134,39 +122,31 @@ app.get('/products/*', (req, res) => {
   res.redirect(`/images/${imagePath}`);
 });
 
-app.get('/_next/image', async (req, res) => {
+app.get('/_next/image', (req, res) => {
   const imageUrl = req.query.url;
-  
-  // Try local images first
-  if (imageUrl) {
-    let localImagePath = '';
-    if (imageUrl.startsWith('/images/')) {
-      localImagePath = path.join(__dirname, imageUrl);
-    } else if (imageUrl.startsWith('/products/')) {
-      localImagePath = path.join(__dirname, imageUrl.replace('/products/', '/images/'));
-    } else if (imageUrl.includes('cdn.wspanelas.com/images/')) {
-      const filename = imageUrl.split('cdn.wspanelas.com/images/')[1];
-      localImagePath = path.join(__dirname, 'images', filename);
-    }
+  if (!imageUrl) return res.status(400).send('Missing url parameter');
 
-    if (localImagePath && fs.existsSync(localImagePath)) {
-      res.set('Cache-Control', 'public, max-age=86400');
-      const ext = path.extname(localImagePath).toLowerCase();
-      const mimeTypes = {
-        '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg', '.png': 'image/png',
-        '.webp': 'image/webp', '.gif': 'image/gif', '.svg': 'image/svg+xml'
-      };
-      if (mimeTypes[ext]) res.set('Content-Type', mimeTypes[ext]);
-      return res.sendFile(localImagePath);
-    }
+  // Senior Fix: Instead of proxying or sendFile, we redirect to the raw image if it's local.
+  // This offloads the work to the Netlify CDN which we know works for direct /images/ paths.
+  let targetPath = imageUrl;
+  if (imageUrl.includes('cdn.wspanelas.com/images/')) {
+    targetPath = '/images/' + imageUrl.split('cdn.wspanelas.com/images/')[1];
+  } else if (imageUrl.startsWith('/products/')) {
+    targetPath = imageUrl.replace('/products/', '/images/');
   }
 
+  // If it's a local image path, redirect to it directly.
+  if (targetPath.startsWith('/images/')) {
+     return res.redirect(targetPath);
+  }
+
+  // If we can't map it to local, try to proxy as last resort
   try {
-    const response = await axiosImg.get(`${LIVE_SITE}${req.originalUrl}`, { responseType: 'stream', timeout: 10000 });
-    res.set('Content-Type', response.headers['content-type']);
-    res.set('Cache-Control', 'public, max-age=86400');
-    response.data.pipe(res);
-  } catch { res.status(404).end(); }
+    const remoteUrl = imageUrl.startsWith('http') ? imageUrl : `${LIVE_SITE}${imageUrl}`;
+    res.redirect(remoteUrl);
+  } catch {
+    res.status(404).end();
+  }
 });
 
 // Uploads
@@ -448,11 +428,31 @@ app.get(`/_next/data/${BUILD_ID}/:path(*).json`, async (req, res) => {
   }
 });
 
+
+
 // ============================================================
-// SPA CATCH-ALL
+// SPA CATCH-ALL & HTML PATCHER
 // ============================================================
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'index.html'));
+  const indexPath = path.join(__dirname, 'index.html');
+  if (req.path === '/' || !req.path.includes('.')) {
+    try {
+      let html = fs.readFileSync(indexPath, 'utf8');
+      // Senior Fix: Patch all URLs on the fly
+      html = html.replace(/https:\/\/cdn\.wspanelas\.com\/images\//g, '/images/');
+      html = html.replace(/\/_next\/image\?url=([^&"'> \n]+)(?:&[^"'> \n]*)?/g, (match, url) => {
+        const decoded = decodeURIComponent(url);
+        if (decoded.includes('cdn.wspanelas.com/images/')) {
+          return '/images/' + decoded.split('cdn.wspanelas.com/images/')[1];
+        }
+        return decoded;
+      });
+      return res.send(html);
+    } catch (e) {
+      return res.sendFile(indexPath);
+    }
+  }
+  res.sendFile(indexPath);
 });
 
 // ============================================================
