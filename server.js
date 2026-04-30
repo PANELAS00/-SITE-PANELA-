@@ -123,17 +123,43 @@ app.use(['/images', '/products', '/_next/image'], hotlinkProtection);
 
 // Proxy product images and _next/image to live site
 const axiosImg = require('axios');
-app.get('/products/*', async (req, res) => {
-  try {
-    const response = await axiosImg.get(`https://wspanelas.com${req.originalUrl}`, { responseType: 'stream', timeout: 10000 });
-    res.set('Content-Type', response.headers['content-type']);
-    res.set('Cache-Control', 'public, max-age=86400');
-    response.data.pipe(res);
-  } catch { res.status(404).end(); }
+
+app.get('/products/*', (req, res) => {
+  const imagePath = req.params[0];
+  const localPath = path.join(__dirname, 'images', imagePath);
+  if (fs.existsSync(localPath)) {
+    return res.sendFile(localPath);
+  }
+  // Fallback
+  res.redirect(`/images/${imagePath}`);
 });
+
 app.get('/_next/image', async (req, res) => {
+  const imageUrl = req.query.url;
+  
+  // Try local images first
+  if (imageUrl) {
+    let localImagePath = '';
+    if (imageUrl.startsWith('/images/')) {
+      localImagePath = path.join(__dirname, imageUrl);
+    } else if (imageUrl.startsWith('/products/')) {
+      localImagePath = path.join(__dirname, imageUrl.replace('/products/', '/images/'));
+    }
+
+    if (localImagePath && fs.existsSync(localImagePath)) {
+      res.set('Cache-Control', 'public, max-age=86400');
+      const ext = path.extname(localImagePath).toLowerCase();
+      const mimeTypes = {
+        '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg', '.png': 'image/png',
+        '.webp': 'image/webp', '.gif': 'image/gif', '.svg': 'image/svg+xml'
+      };
+      if (mimeTypes[ext]) res.set('Content-Type', mimeTypes[ext]);
+      return res.sendFile(localImagePath);
+    }
+  }
+
   try {
-    const response = await axiosImg.get(`https://wspanelas.com${req.originalUrl}`, { responseType: 'stream', timeout: 10000 });
+    const response = await axiosImg.get(`${LIVE_SITE}${req.originalUrl}`, { responseType: 'stream', timeout: 10000 });
     res.set('Content-Type', response.headers['content-type']);
     res.set('Cache-Control', 'public, max-age=86400');
     response.data.pipe(res);

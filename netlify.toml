@@ -5,6 +5,7 @@
 
 [functions]
   node_bundler = "esbuild"
+  included_files = ["images/**", "data/**", "index.html"]
 
 [[redirects]]
   from = "/api/config/whatsapp"
