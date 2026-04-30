@@ -1,5 +1,11 @@
 exports.handler = async () => ({
   statusCode: 200,
-  headers: { "Content-Type": "application/json" },
-  body: JSON.stringify({ success: true, number: process.env.WHATSAPP_NUMBER || "573118656289" })
+  headers: { 
+    "Content-Type": "application/json",
+    "Access-Control-Allow-Origin": "*"
+  },
+  body: JSON.stringify({ 
+    success: false, 
+    message: "WhatsApp deactivated"
+  })
 });

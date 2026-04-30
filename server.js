@@ -93,7 +93,7 @@ const SITE_SETTINGS = {
     product_buy: "*Olá! Vim da WS Fábrica de Panelas e gostaria de comprar pelo WhatsApp*\n\n*Produto:* {{produto}}\n*{{variante_label}}:* {{variante_valor}}\n*Quantidade:* {{quantidade}}\n*Valor:* {{valor}}\n\n*Link do produto:* {{link}}",
     cart_checkout: "*Olá! Vim da WS Fábrica de Panelas e gostaria de finalizar minha compra:*\n\n{{itens}}\n\n*Total:* {{total}}"
   },
-  show_whatsapp_button: true
+  show_whatsapp_button: false
 };
 
 // ============================================================
@@ -156,7 +156,7 @@ const upload = multer({ dest: uploadsDir });
 app.get('/api/site-settings', (req, res) => res.json(SITE_SETTINGS));
 
 app.get('/api/config/whatsapp', (req, res) => {
-  res.json({ success: true, number: SITE_SETTINGS.whatsapp.primary_number });
+  res.json({ success: false, message: "WhatsApp deactivated" });
 });
 
 app.get('/api/config/whatsapp-messages', (req, res) => {
