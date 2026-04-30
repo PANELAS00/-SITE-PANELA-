@@ -1,16 +1,10 @@
 [build]
-  command = "npm install"
-  functions = "netlify/functions"
+  command = ""
   publish = "."
+  functions = "netlify/functions"
 
 [functions]
   node_bundler = "esbuild"
-
-# Desabilitar plugin do Next.js para evitar detecção errada
-[[plugins]]
-  package = "@netlify/plugin-nextjs"
-  [plugins.inputs]
-    disable = true
 
 [[redirects]]
   from = "/api/*"
