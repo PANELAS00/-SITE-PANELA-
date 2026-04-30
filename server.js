@@ -105,12 +105,17 @@ const SITE_SETTINGS = {
 // ============================================================
 // STATIC FILE SERVING
 // ============================================================
-app.use(express.static(path.join(__dirname, 'public')));
-app.use('/_next/static', express.static(path.join(__dirname, 'public/_next/static')));
+// On Netlify: __dirname = /var/task/netlify/functions, public/ is 2 levels up
+const PUBLIC_DIR = isServerless
+  ? path.join(__dirname, '../../public')
+  : path.join(__dirname, 'public');
+
+app.use(express.static(PUBLIC_DIR));
+app.use('/_next/static', express.static(path.join(PUBLIC_DIR, '_next/static')));
 
 // SEO Assets
-app.get('/robots.txt', (req, res) => res.sendFile(path.join(__dirname, 'public/robots.txt')));
-app.get('/sitemap.xml', (req, res) => res.sendFile(path.join(__dirname, 'public/sitemap.xml')));
+app.get('/robots.txt', (req, res) => res.sendFile(path.join(PUBLIC_DIR, 'robots.txt')));
+app.get('/sitemap.xml', (req, res) => res.sendFile(path.join(PUBLIC_DIR, 'sitemap.xml')));
 
 // Task 5: Image hotlink protection
 // Hotlink protection disabled for stability
@@ -119,7 +124,7 @@ app.get('/sitemap.xml', (req, res) => res.sendFile(path.join(__dirname, 'public/
 
 app.get('/products/*', (req, res) => {
   const imagePath = req.params[0];
-  const localPath = path.join(__dirname, 'public/images', imagePath);
+  const localPath = path.join(PUBLIC_DIR, 'images', imagePath);
   if (fs.existsSync(localPath)) {
     return res.sendFile(localPath);
   }
@@ -448,7 +453,7 @@ app.get(`/_next/data/${BUILD_ID}/:path(*).json`, async (req, res) => {
 // SPA CATCH-ALL
 // ============================================================
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public/index.html'));
+  res.sendFile(path.join(PUBLIC_DIR, 'index.html'));
 });
 
 // ============================================================
