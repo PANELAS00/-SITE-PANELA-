@@ -141,7 +141,8 @@ app.get('/_next/image', async (req, res) => {
 });
 
 // Uploads
-const uploadsDir = path.join(__dirname, 'uploads', 'receipts');
+const isServerlessEnv = !!process.env.AWS_LAMBDA_FUNCTION_NAME || !!process.env.NETLIFY;
+const uploadsDir = isServerlessEnv ? path.join('/tmp', 'uploads', 'receipts') : path.join(__dirname, 'uploads', 'receipts');
 if (!fs.existsSync(uploadsDir)) fs.mkdirSync(uploadsDir, { recursive: true });
 const upload = multer({ dest: uploadsDir });
 
