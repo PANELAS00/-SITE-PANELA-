@@ -17,7 +17,7 @@
   status = 200
 
 [[redirects]]
-  from = "/_next/image/*"
+  from = "/assets_next/image/*"
   to = "/.netlify/functions/api/_next/image/:splat"
   status = 200
 
