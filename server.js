@@ -11,10 +11,11 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 const BUILD_ID = 'iobITvSU-zXAZFV2O5LtN';
 
-const DATA_DIR = process.env.NETLIFY ? '/tmp/data' : path.join(__dirname, 'public/data');
-const UPLOADS_DIR = process.env.NETLIFY ? '/tmp/images' : path.join(__dirname, 'public/images');
+const isServerless = !!process.env.AWS_LAMBDA_FUNCTION_NAME || !!process.env.NETLIFY;
+const DATA_DIR = isServerless ? '/tmp/data' : path.join(__dirname, 'public/data');
+const UPLOADS_DIR = isServerless ? '/tmp/images' : path.join(__dirname, 'public/images');
 
-// Ensure directories exist
+// Ensure directories exist (only /tmp is writable on Netlify)
 if (!fs.existsSync(DATA_DIR)) fs.mkdirSync(DATA_DIR, { recursive: true });
 if (!fs.existsSync(UPLOADS_DIR)) fs.mkdirSync(UPLOADS_DIR, { recursive: true });
 
@@ -154,8 +155,7 @@ app.get('/_next/image', (req, res) => {
 });
 
 // Uploads
-const isServerlessEnv = !!process.env.AWS_LAMBDA_FUNCTION_NAME || !!process.env.NETLIFY;
-const uploadsDir = isServerlessEnv ? path.join('/tmp', 'uploads', 'receipts') : path.join(__dirname, 'uploads', 'receipts');
+const uploadsDir = isServerless ? '/tmp/receipts' : path.join(__dirname, 'public/uploads/receipts');
 if (!fs.existsSync(uploadsDir)) fs.mkdirSync(uploadsDir, { recursive: true });
 const upload = multer({ dest: uploadsDir });
 
