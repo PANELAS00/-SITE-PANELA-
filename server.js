@@ -122,9 +122,9 @@ const hotlinkProtection = (req, res, next) => {
   res.status(403).send('Hotlinking not allowed');
 };
 
-app.use(['/images', '/products', '/_next/image'], hotlinkProtection);
+app.use(['/images', '/products', '/assets_next/image'], hotlinkProtection);
 
-// Proxy product images and _next/image to live site
+// Proxy product images and assets_next/image to live site
 const axiosImg = require('axios');
 app.get('/products/*', async (req, res) => {
   try {
@@ -134,9 +134,10 @@ app.get('/products/*', async (req, res) => {
     response.data.pipe(res);
   } catch { res.status(404).end(); }
 });
-app.get('/_next/image', async (req, res) => {
+app.get('/assets_next/image', async (req, res) => {
   try {
-    const response = await axiosImg.get(`https://wspanelas.com${req.originalUrl}`, { responseType: 'stream', timeout: 10000 });
+    const liveUrl = `https://wspanelas.com${req.originalUrl.replace('/assets_next', '/_next')}`;
+    const response = await axiosImg.get(liveUrl, { responseType: 'stream', timeout: 10000 });
     res.set('Content-Type', response.headers['content-type']);
     res.set('Cache-Control', 'public, max-age=86400');
     response.data.pipe(res);
