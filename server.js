@@ -144,6 +144,9 @@ app.get('/_next/image', async (req, res) => {
       localImagePath = path.join(__dirname, imageUrl);
     } else if (imageUrl.startsWith('/products/')) {
       localImagePath = path.join(__dirname, imageUrl.replace('/products/', '/images/'));
+    } else if (imageUrl.includes('cdn.wspanelas.com/images/')) {
+      const filename = imageUrl.split('cdn.wspanelas.com/images/')[1];
+      localImagePath = path.join(__dirname, 'images', filename);
     }
 
     if (localImagePath && fs.existsSync(localImagePath)) {
