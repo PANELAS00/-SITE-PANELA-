@@ -49,6 +49,7 @@ app.use((req, res, next) => {
 // Task 4: API origin validation
 app.use('/api/', (req, res, next) => {
   const allowedOrigin = 'https://wspanelas.com';
+  const allowedNetlify = 'https://wspanelas.netlify.app';
   const origin = req.get('Origin');
   const referer = req.get('Referer');
 
@@ -56,11 +57,11 @@ app.use('/api/', (req, res, next) => {
   // In development, we might want to allow localhost.
   const isLocal = req.hostname === 'localhost' || req.hostname === '127.0.0.1';
   
-  if (isLocal || origin === allowedOrigin || (referer && referer.startsWith(allowedOrigin))) {
+  if (isLocal || origin === allowedOrigin || origin === allowedNetlify || (referer && (referer.startsWith(allowedOrigin) || referer.startsWith(allowedNetlify)))) {
     return next();
   }
 
-  res.status(403).json({ error: 'Forbidden', message: 'API access only allowed from wspanelas.com' });
+  res.status(403).json({ error: 'Forbidden', message: 'API access only allowed from wspanelas.com or wspanelas.netlify.app' });
 });
 
 // ============================================================
@@ -112,9 +113,10 @@ app.get('/sitemap.xml', (req, res) => res.sendFile(path.join(__dirname, 'sitemap
 const hotlinkProtection = (req, res, next) => {
   const referer = req.get('Referer');
   const allowedOrigin = 'https://wspanelas.com';
+  const allowedNetlify = 'https://wspanelas.netlify.app';
   const isLocal = req.hostname === 'localhost' || req.hostname === '127.0.0.1';
 
-  if (!referer || isLocal || referer.startsWith(allowedOrigin) || referer.startsWith('http://localhost')) {
+  if (!referer || isLocal || referer.startsWith(allowedOrigin) || referer.startsWith(allowedNetlify) || referer.startsWith('http://localhost')) {
     return next();
   }
 
