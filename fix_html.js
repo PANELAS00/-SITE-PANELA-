@@ -14,8 +14,8 @@ content = content.replace(/"images\//g, '"/images/');
 // We will just let it be for now and address it later if needed.
 
 // Fix Marquee text "LOJA%ATE"
-// Original: ATE 50% DE DESCONTO EM TODA A LOJA<span class="jsx-78659c567a004c99 topbar-marquee-separator">%</span>
-content = content.replace(/ATE 50% DE DESCONTO EM TODA A LOJA<span class="jsx-78659c567a004c99 topbar-marquee-separator">%<\/span>/g, 'ATÉ 50% DE DESCONTO EM TODA A LOJA<span class="jsx-78659c567a004c99 topbar-marquee-separator">|</span>');
+// Original: ATÉ 50% DE DESCONTO EM TODA A LOJA<span class="jsx-78659c567a004c99 topbar-marquee-separator"> &nbsp; &bull; &nbsp; </span>
+content = content.replace(/ATÉ 50% DE DESCONTO EM TODA A LOJA<span class="jsx-78659c567a004c99 topbar-marquee-separator">%<\/span>/g, 'ATÉ 50% DE DESCONTO EM TODA A LOJA<span class="jsx-78659c567a004c99 topbar-marquee-separator"> &nbsp; &bull; &nbsp; </span>');
 
 fs.writeFileSync(file, content);
 console.log('Fixed index.html relative paths and marquee');

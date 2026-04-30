@@ -1,0 +1,10 @@
+const fs = require('fs');
+let html = fs.readFileSync('index.html', 'utf8');
+html = html.replace(/src="images\//g, 'src="/images/');
+html = html.replace(/src="js\//g, 'src="/js/');
+html = html.replace(/src="css\//g, 'src="/css/');
+html = html.replace(/href="css\//g, 'href="/css/');
+html = html.replace(/src="_next\//g, 'src="/_next/');
+html = html.replace(/href="_next\//g, 'href="/_next/');
+fs.writeFileSync('index.html', html);
+console.log('Paths corrigidos.');

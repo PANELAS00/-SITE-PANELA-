@@ -156,7 +156,15 @@ const upload = multer({ dest: uploadsDir });
 app.get('/api/site-settings', (req, res) => res.json(SITE_SETTINGS));
 
 app.get('/api/config/whatsapp', (req, res) => {
-  res.json({ success: false, message: "WhatsApp deactivated" });
+  res.json({ 
+    success: true, 
+    config: { 
+      primary_number: "", 
+      secondary_number: "", 
+      formatted: "", 
+      active: false 
+    } 
+  });
 });
 
 app.get('/api/config/whatsapp-messages', (req, res) => {
