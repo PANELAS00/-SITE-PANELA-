@@ -115,7 +115,6 @@ app.get('/sitemap.xml', (req, res) => res.sendFile(path.join(__dirname, 'public/
 // Hotlink protection disabled for stability
 
 // Proxy product images and _next/image to live site
-const axiosImg = require('axios');
 
 app.get('/products/*', (req, res) => {
   const imagePath = req.params[0];
@@ -402,7 +401,6 @@ app.post('/api/pay/receipt', upload.single('file'), (req, res) => {
 // ============================================================
 // _NEXT/DATA ENDPOINTS
 // ============================================================
-const axios = require('axios');
 const LIVE_SITE = 'https://wspanelas.com';
 
 // /pay/ — served locally (checkout sessions)
@@ -466,3 +464,4 @@ if (process.env.NODE_ENV !== 'test' && !process.env.NETLIFY) {
 }
 
 module.exports = app;
+                                                                   
